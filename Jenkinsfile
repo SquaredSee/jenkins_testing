@@ -1,9 +1,9 @@
 pipeline {
-    agent { docker { image 'python' } }
+    agent { dockerfile true }
     stages {
-        stage('build') {
+        stage('Test') {
             steps {
-                sh 'python --version'
+                sh 'psql --version'
             }
         }
     }
