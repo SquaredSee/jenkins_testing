@@ -1,8 +1,6 @@
 # Use the official PostgreSQL image as a base
 FROM postgres:9.4.17-alpine
 
-RUN whoami
-
 # Jira dockerfile inspired by https://github.com/cptactionhank/docker-atlassian-jira-software
 
 # Jira environment variables
