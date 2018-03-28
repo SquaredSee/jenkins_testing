@@ -1,0 +1,39 @@
+version: "3"
+services:
+  # Run 5 instances of the image as a service called web
+  web:
+    image: friendlyhello:latest
+    deploy:
+      replicas: 5
+      resources:
+        # limit each one to use at most 10% of the CPU (across all cores)
+        # and 50MB of RAM.
+        limits:
+          cpus: "0.1"
+          memory: 50M
+      # Immediately restart containers if one fails.
+      restart_policy:
+        condition: on-failure
+    # Map port 80 on the host to web’s port 80.
+    ports:
+      - "80:80"
+    # Instruct web’s containers to share port 80
+    # via a load-balanced network called webnet.
+    # (Internally, the containers themselves publish to web’s port 80 at an ephemeral port.)
+    networks:
+      - webnet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+# Define the webnet network with the default settings
+# (which is a load-balanced overlay network).
+networks:
+  webnet:
