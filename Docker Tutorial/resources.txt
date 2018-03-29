@@ -1,0 +1,7 @@
+# registry
+https://docs.docker.com/registry/deploying/
+
+# insecure registry setup
+https://docs.docker.com/registry/insecure/
+http://akrambenaissi.com/2015/11/addingediting-insecure-registry-to-docker-machine-afterwards
+
