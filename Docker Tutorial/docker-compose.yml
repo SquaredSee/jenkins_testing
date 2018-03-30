@@ -3,7 +3,7 @@ services:
   # Run 5 instances of the image as a service called web
   web:
     # pull from local registry on host
-    image: 172.17.0.1:5000/friendlyhello
+    image: 192.168.99.1:5000/friendlyhello
     deploy:
       replicas: 5
       resources:
@@ -21,6 +21,29 @@ services:
     # Instruct web’s containers to share port 80
     # via a load-balanced network called webnet.
     # (Internally, the containers themselves publish to web’s port 80 at an ephemeral port.)
+    networks:
+      - webnet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "/home/docker/data:/data"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    command: redis-server --appendonly yes
     networks:
       - webnet
 # Define the webnet network with the default settings
