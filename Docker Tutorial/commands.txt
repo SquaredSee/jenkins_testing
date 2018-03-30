@@ -1,0 +1,45 @@
+# builds current directory and tags the image "myimagename"
+docker build -t . myimagename
+
+# run a private registry on port 5000
+docker run -d -p 5000:5000 --name registry registry:2
+
+# tag the image
+docker tag friendlyhello localhost:5000/myimagename
+
+# push the tagged image to the registry
+docker push localhost:5000/myimagename
+
+# assumes daemon.json doesn't exist, add your registry to allowed
+# insecure registries for this host
+sudo echo "\
+{
+  "insecure-registries" : ["your_ip_here:5000"]
+}" > /etc/docker/daemon.json
+
+# create VMs for the swarm, set allowed insecure registry
+docker-machine create --driver virtualbox \
+    --engine-insecure-registry your_ip_here:5000 myvm1
+docker-machine create --driver virtualbox \
+    --engine-insecure-registry your_ip_here:5000 myvm2
+
+# list docker machines to get IP addresses
+docker-machine ls
+
+# use the IP address for myvm1 to initialize myvm1 as swarm manager
+docker-machine ssh myvm1 \
+    "docker swarm init --advertise-addr myvm1_ip_here"
+
+# output of the above will provide a command to run on other nodes
+# to join the swarm, ssh and run command to join swarm on myvm2
+docker-machine ssh myvm2 \
+    "docker swarm join --token mytoken myvmip:port"
+
+# set the docker env vars to let shell talk to myvm1 without ssh
+eval $(docker-machine env myvm1)
+
+# deploy the docker-compose file to the swarm
+docker stack deploy -c docker-compose.yml myappname
+
+# now you should be able to access the site via the IPs
+# provided by `docker-machine ls`
