@@ -1,0 +1,20 @@
+version: '3'
+services:
+  web:
+    # build from Dockerfile in current repository
+    build: .
+    # forward container port 5000 to host port 5050
+    ports:
+     - "5050:5000"
+    # use a bind mount to mount the current directory to
+    # the /code directory in the container to allow editing
+    # without rebuilding the image
+    volumes:
+     - .:/code
+  redis:
+    image: "redis:alpine"
+  # # visualizer only works in swarm mode
+  # visualizer:
+  #   image: dockersamples/visualizer:stable
+  #   ports:
+  #     - "8080:8080"

@@ -1,0 +1,17 @@
+version: '3'
+services:
+  jira:
+    image: cptactionhank/atlassian-jira-software:7.8.1
+    ports:
+      - "8080:8080"
+    restart: always
+  postgres:
+    image: postgres:9.4.17-alpine
+    ports:
+     - "5432:5432"
+    restart: always
+    # # restart_policy seems to only work on swarm?
+    # restart_policy:
+    #   condition: on-failure
+    # environment:
+    #   POSTGRES_PASSWORD: example
