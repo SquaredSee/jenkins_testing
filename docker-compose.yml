@@ -10,8 +10,13 @@ services:
     ports:
      - "5432:5432"
     restart: always
+    environment:
+      POSTGRES_PASSWORD: password
     # # restart_policy seems to only work on swarm?
     # restart_policy:
     #   condition: on-failure
-    # environment:
-    #   POSTGRES_PASSWORD: example
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
