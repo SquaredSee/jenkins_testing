@@ -8,7 +8,7 @@ pipeline {
     }
     stage('test jira') {
       steps {
-        sh 'wget --retry-connrefused --tries=120 --waitretry=1 -q localhost:8081'
+        sh 'wget --retry-connrefused --waitretry=1 -q localhost:8081'
         sh 'curl localhost:8081'
       }
     }
