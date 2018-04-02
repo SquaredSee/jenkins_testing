@@ -8,9 +8,7 @@ pipeline {
     }
     stage('test jira') {
       steps {
-        waitUntil {
-          sh 'wget --retry-connrefused --retry-on-http-error=503 --tries=120 --waitretry=2 localhost:8081 -O /dev/null'
-        }
+        sh 'wget --retry-connrefused --retry-on-http-error=503 --tries=120 --waitretry=2 localhost:8081 -O /dev/null'
       }
     }
     stage('test postgres') {
