@@ -20,5 +20,10 @@ pipeline {
         }
       }
     }
+    stage('cleanup') {
+      steps {
+        sh 'docker-compose down -v'
+      }
+    }
   }
 }
