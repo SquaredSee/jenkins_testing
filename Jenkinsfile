@@ -14,7 +14,6 @@ pipeline {
     stage('test postgres') {
       steps {
         sh 'PGPASSWORD=password psql -h localhost -p 5432 -U postgres'
-        sh '\\q'
       }
     }
   }
