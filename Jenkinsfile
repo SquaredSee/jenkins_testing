@@ -15,7 +15,7 @@ pipeline {
         }
         stage('test postgres') {
           steps {
-            sh 'psql -h localhost -p 5432 -U postgres -W password'
+            sh 'PGPASSWORD=password psql -h localhost -p 5432 -U postgres'
           }
         }
       }
@@ -23,9 +23,7 @@ pipeline {
   }
   post {
     always {
-      sh 'docker-compose down -v'
-      
+      sh 'docker-compose down -v' 
     }
-    
   }
 }
