@@ -6,24 +6,24 @@ pipeline {
         sh 'docker-compose up -d'
       }
     }
-    stage('test') {
-      parallel {
-        stage('test jira') {
-          steps {
-            sh 'curl localhost:8081'
-          }
-        }
-        stage('test postgres') {
-          steps {
-            sh 'PGPASSWORD=password psql -h localhost -p 5432 -U postgres'
-          }
-        }
+    stage('test jira') {
+      steps {
+        sh 'wget --retry-connrefused --tries=120 --waitretry=1 -q localhost:8081'
+        sh 'curl localhost:8081'
+      }
+    }
+    stage('test postgres') {
+      steps {
+        sh 'PGPASSWORD=password psql -h localhost -p 5432 -U postgres'
+        sh '\\q'
       }
     }
   }
   post {
     always {
-      sh 'docker-compose down -v' 
+      sh 'docker-compose down -v'
+      
     }
+    
   }
 }
